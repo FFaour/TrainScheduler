@@ -22,14 +22,10 @@ const clearInputs = () => {
   $("#frequency-input").val("");
 }
 
-function productDelete(ctl) {
-  $(ctl).parents("tr").remove();
-}
-
 // Create an on click function that adds trains to the top table
 $("#add-train-btn").on("click", function(event) {
   event.preventDefault();
-  
+
   // create variables with the user input from form
   var trnName = $("#train-name-input").val().trim();
   var trnDest = $("#destination-input").val().trim();
@@ -46,7 +42,7 @@ $("#add-train-btn").on("click", function(event) {
   
   // upload the new train data to the database if complete else warning modal
   if (newTrn.name === "" || newTrn.destination === "" || newTrn.firstTime === "" || newTrn.frequency === "") {
-    $("#closeModal").modal();
+    $(".modal").modal('show');
   } else {
     const newSchedule = database.ref().push(newTrn);
     console.log(newSchedule.key);
@@ -55,19 +51,15 @@ $("#add-train-btn").on("click", function(event) {
     // console log the object and values that were just pushed to the database
     console.log(newTrn);
   };
-
-});
-
-//removes the "active" class to .popup and .popup-content when the "Close" button is clicked 
-$(".close").on("click", function() {
-  console.log("Close was clicked!");
-  $(".popup-overlay, .popup-content").removeClass("active");
 });
 
 // Delete the clicked row
 $(".delete").on("click", function() {
   console.log("Delete was clicked!");
-  //productDelete(this);
+  let key = $(".delete").val();
+  console.log("Deleting the following key: " + key);
+  ref.child(key).remove();
+  $(this).parents("tr").remove();
 });
 
 // create a firebase event for adding the data from the new trains and then populating them in the DOM.
@@ -99,7 +91,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   // calculate the next arriving train
   const nextArrival = moment().add(minutesAway, "minutes").format("hh:mm a");
   // Add a delete button to each entry
-  const deleteButton = `<button type="button" class="close delete" id="trainId" data-dismiss="modal">X</button>`
+  const deleteButton = `<button type="button" class="delete" id="trainId" data-dismiss="modal">X</button>`
   // create the HTML to add the scheduled train
   const schedule = (
   "<tr><td>" + trnName
@@ -113,5 +105,4 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   $("#train-table > tbody").append(schedule);
   // and append the id to the delete button
   $("#trainId").attr("value", childSnapshot.key);
-  $("#trainId").attr("id", childSnapshot.key);
 });

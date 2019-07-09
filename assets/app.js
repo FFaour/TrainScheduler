@@ -1,5 +1,5 @@
 // Initialize Firebase
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyAzt-_OcqV3uo0Uj3laeqnYwV45ryKUWWw",
   authDomain: "trainscheduler-b61d2.firebaseapp.com",
   databaseURL: "https://trainscheduler-b61d2.firebaseio.com",
@@ -12,7 +12,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 // Create a variable to reference the database
-var database = firebase.database();
+const database = firebase.database();
 
 //Function declarations
 const clearInputs = () => {
@@ -27,13 +27,13 @@ $("#add-train-btn").on("click", function(event) {
   event.preventDefault();
 
   // create variables with the user input from form
-  var trnName = $("#train-name-input").val().trim();
-  var trnDest = $("#destination-input").val().trim();
-  var firstTrnTime = $("#first-train-input").val().trim();
-  var trnFreq = $("#frequency-input").val().trim();
+  const trnName = $("#train-name-input").val().trim();
+  const trnDest = $("#destination-input").val().trim();
+  const firstTrnTime = $("#first-train-input").val().trim();
+  const trnFreq = $("#frequency-input").val().trim();
 
   // create a temporary object for holding the new train data
-  var newTrn = {
+  const newTrn = {
     name: trnName,
     destination: trnDest,
     firstTime: firstTrnTime,
@@ -66,10 +66,10 @@ $(".delete").on("click", function() {
 database.ref().on("child_added", function(childSnapshot, prevChildKey) {
   
   // store snapshot changes in variables
-  var trnName = childSnapshot.val().name;
-  var trnDest = childSnapshot.val().destination;
-  var firstTrnTime = childSnapshot.val().firstTime;
-  var trnFreq = childSnapshot.val().frequency;
+  const trnName = childSnapshot.val().name;
+  const trnDest = childSnapshot.val().destination;
+  const firstTrnTime = childSnapshot.val().firstTime;
+  const trnFreq = childSnapshot.val().frequency;
 
   // log the values
   console.log(trnName);
@@ -79,7 +79,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
   // process for calculating the Next Arrival and Minutes Away fields...
   // make sure the first train time is after the eventual current time
-  var firstTrnTimeConv = moment(firstTrnTime, "hh:mm a").subtract(1, "years");
+  const firstTrnTimeConv = moment(firstTrnTime, "hh:mm a").subtract(1, "years");
   // store variable for current time
   const currentTime = moment().format("HH:mm a");
   // store variable for difference of current time and first train time
